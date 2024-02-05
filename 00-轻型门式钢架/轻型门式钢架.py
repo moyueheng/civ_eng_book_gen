@@ -128,8 +128,8 @@ p.paragraph_format.first_line_indent = Pt(0)
 p.paragraph_format.line_spacing = 1
 # ----------------------------------------------------------------------------------------------------------------------
 # 生成图片文件名
-filename1 = f"C:\\Users\\Q\\PycharmProjects\\pythonProject\\轻型门式钢架\\{int(KD)}m跨度{ZJ}m柱距平面支撑.png"
-filename2 = f"C:\\Users\\Q\\PycharmProjects\\pythonProject\\轻型门式钢架\\{int(KD)}m跨度{ZJ}m柱距柱间支撑.png"
+filename1 = f"./image/{int(KD)}m跨度{ZJ}m柱距平面支撑.png"
+filename2 = f"./image/{int(KD)}m跨度{ZJ}m柱距柱间支撑.png"
 
 # 插入图片
 docx.paragraphs[4].add_run().add_picture(filename1, width=Inches(6))
@@ -234,8 +234,8 @@ p.paragraph_format.first_line_indent = Pt(0)
 p.paragraph_format.line_spacing = 1
 # ----------------------------------------------------------------------------------------------------------------------
 # 生成图片文件名
-filename1 = f"C:\\Users\\Q\\PycharmProjects\\pythonProject\\轻型门式钢架\\恒荷载下的计算简图.png"
-filename2 = f"C:\\Users\\Q\\PycharmProjects\\pythonProject\\轻型门式钢架\\风荷载下的计算简图.png"
+filename1 = f"./image/恒荷载下的计算简图.png"
+filename2 = f"./image/风荷载下的计算简图.png"
 
 # 插入图片
 docx.paragraphs[9].add_run().add_picture(filename1, width=Inches(6))
@@ -288,22 +288,22 @@ p.paragraph_format.line_spacing = 1
 # ----------------------------------------------------------------------------------------------------------------------
 # 生成图片文件名
 filename1 = (
-    f"C:\\Users\\Q\\PycharmProjects\\pythonProject\\轻型门式钢架\\恒活荷载内力系数1.png"
+    f"./image/恒活荷载内力系数1.png"
 )
 filename2 = (
-    f"C:\\Users\\Q\\PycharmProjects\\pythonProject\\轻型门式钢架\\恒活荷载内力系数2.png"
+    f"./image/恒活荷载内力系数2.png"
 )
 filename3 = (
-    f"C:\\Users\\Q\\PycharmProjects\\pythonProject\\轻型门式钢架\\恒活荷载内力系数3.png"
+    f"./image/恒活荷载内力系数3.png"
 )
 filename4 = (
-    f"C:\\Users\\Q\\PycharmProjects\\pythonProject\\轻型门式钢架\\风荷载内力系数1.png"
+    f"./image/风荷载内力系数1.png"
 )
 filename5 = (
-    f"C:\\Users\\Q\\PycharmProjects\\pythonProject\\轻型门式钢架\\风荷载内力系数2.png"
+    f"./image/风荷载内力系数2.png"
 )
 filename6 = (
-    f"C:\\Users\\Q\\PycharmProjects\\pythonProject\\轻型门式钢架\\风荷载内力系数3.png"
+    f"./image/风荷载内力系数3.png"
 )
 # 插入图片
 docx.paragraphs[12].add_run().add_picture(filename1, width=Inches(6))
@@ -1936,7 +1936,7 @@ p.paragraph_format.line_spacing = 1
 # ----------------------------------------------------------------------------------------------------------------------
 # 插入图片
 docx.paragraphs[24].add_run().add_picture(
-    "C:\\Users\\Q\\PycharmProjects\\pythonProject\\轻型门式钢架\\拼接板尺寸详图.png",
+    "./image/拼接板尺寸详图.png",
     width=Inches(2),
 )
 # ----------------------------------------------------------------------------------------------------------------------
@@ -2227,7 +2227,7 @@ p.paragraph_format.line_spacing = 1
 # ----------------------------------------------------------------------------------------------------------------------
 # 添加图片
 docx.paragraphs[30].add_run().add_picture(
-    "C:\\Users\\Q\\PycharmProjects\\pythonProject\\钢屋架\\檩条计算简图.png",
+    "./image/檩条计算简图.png",
     width=Inches(5.5),
 )
 # ----------------------------------------------------------------------------------------------------------------------
