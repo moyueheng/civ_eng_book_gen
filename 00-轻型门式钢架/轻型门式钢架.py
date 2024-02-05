@@ -33,7 +33,7 @@ import math
 # 创建一个文档
 docx = Document()
 # 保存一下
-docx.save("轻型门式钢架.docx")
+docx.save("./out/轻型门式钢架.docx")
 # 输入这个标题(文本)内容到P1
 P1 = "轻型门式钢架"
 # 创建一个段落（文本）
@@ -2310,8 +2310,8 @@ p.paragraph_format.first_line_indent = Pt(0)
 p.paragraph_format.line_spacing = 1
 # ----------------------------------------------------------------------------------------------------------------------
 # 保存文档
-docx.save("轻型门式钢架.docx")
+docx.save("./out/轻型门式钢架.docx")
 # 打开文档
 import os
 
-os.system("start 轻型门式钢架.docx")
+os.system("start ./out/轻型门式钢架.docx")
