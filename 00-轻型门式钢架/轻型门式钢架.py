@@ -20,298 +20,121 @@ diaoding = 0.5  # 0.35+round(0.12+0.011*CD,2)  #计算吊顶时  #永久荷载
 gangjia = 0.5  # 计算钢架时   #活荷载
 lintiao = 0.5  # 计算檩条时
 # ----------------------------------------------------------------------------------------------------------------------
-# word文档编辑
-from docx import Document
-from docx.text.paragraph import Paragraph
-from docx.oxml.ns import qn
-from docx.shared import Pt, RGBColor
-from docx.shared import Pt, Cm, Inches
-from docx.enum.text import WD_ALIGN_PARAGRAPH
-from docx.enum.table import WD_TABLE_ALIGNMENT
-import math
+md_str = ""
 
-# 创建一个文档
-docx = Document()
-# 保存一下
-docx.save("./out/轻型门式钢架.docx")
+# word文档编辑
+import math
+import subprocess
+from utils import frange
+
 # 输入这个标题(文本)内容到P1
-P1 = "轻型门式钢架"
-# 创建一个段落（文本）
-p1 = docx.add_paragraph("")
-run1 = p1.add_run(f"{P1}")
-p1.alignment = WD_ALIGN_PARAGRAPH.CENTER
-run1.bold = True  # 加粗
-run1.italic = False  # 斜体
-# 修改字号大小
-run1.font.size = Pt(22)
-# 修改字体样式
-run1.font.name = "黑体"
-run1.element.rPr.rFonts.set(qn("w:eastAsia"), "黑体")
-# 首行缩进，小五＝9磅 五号＝10.5磅 小四＝12磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝22磅 小一＝24磅 一号＝26磅
-p1.paragraph_format.first_line_indent = Pt(0)
-# 设置行间距为，可输入整数和浮点数
-p1.paragraph_format.line_spacing = 1
+md_str += "# 轻型门式钢架 \n"
+
 # ----------------------------------------------------------------------------------------------------------------------
-P = "一、设计资料"
-# 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = True  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(16)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+P = "# 一、设计资料 \n"
+md_str += P
+
 # ----------------------------------------------------------------------------------------------------------------------
 P = f"""单跨双坡轻型门式刚架，刚架跨度{KD}m，长度{CD}m，柱距{ZJ}m，柱高{ZG}m，共有{CD/ZJ+1}榀刚架，屋面坡度{i}，刚架为等截面梁柱，采用{GC}钢材，焊条采用E43型，螺栓采用高强度摩擦螺栓。地震设防烈度为7度，地震加速度设计值为0.1g，风振系数和风压高度变化系数均取1.0，檩条间距{LJ}m，恒荷载分项系数取1.3，活荷载分项系数取1.5，最不利截面内力设计值按荷载基本组合设计。"""
-# 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = False  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(14)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+md_str += P
+
 # ----------------------------------------------------------------------------------------------------------------------
 P = "二、柱网及屋面布置"
-# 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = True  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(16)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+md_str += P
 # ----------------------------------------------------------------------------------------------------------------------
 P = "1、柱网平面布置"
 # 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = False  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(14)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+md_str += P
+
 # ----------------------------------------------------------------------------------------------------------------------
 P = "2、支撑体系布置"
-# 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = False  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(14)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+md_str += P
+
 # ----------------------------------------------------------------------------------------------------------------------
 # 生成图片文件名
 filename1 = f"./image/{int(KD)}m跨度{ZJ}m柱距平面支撑.png"
 filename2 = f"./image/{int(KD)}m跨度{ZJ}m柱距柱间支撑.png"
 
 # 插入图片
-docx.paragraphs[4].add_run().add_picture(filename1, width=Inches(6))
-docx.paragraphs[5].add_run().add_picture(filename2, width=Inches(6))
+md_str += f"![{int(KD)}m跨度{ZJ}m柱距平面支撑.png]({filename1})"
+md_str += f"![{int(KD)}m跨度{ZJ}m柱距柱间支撑.png]({filename2})"
+
+
 # ----------------------------------------------------------------------------------------------------------------------
-P = "三、结构内力分析"
-# 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = True  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(16)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+P = "# 三、结构内力分析"
+md_str += P
 # ----------------------------------------------------------------------------------------------------------------------
-P = "1、荷载计算"
-# 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = False  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(14)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+P = "## 1、荷载计算"
+md_str += P
+
 # ----------------------------------------------------------------------------------------------------------------------
 P = f"""永久荷载：吊顶{diaoding}kN/m²
 屋面活荷载：计算刚架时{gangjia}kN/m²，计算檩条时{lintiao}kN/m²
 风荷载和雪荷载：{w0}kN/m²，{s0}kN/m²"""
-# 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = False  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(14)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+md_str += P
+
 # ----------------------------------------------------------------------------------------------------------------------
 
-# 创建一个6行4列的表格
-table = docx.add_table(rows=6, cols=4)
+table_str = f"""
+**各荷载标准值计算**
+| 类型 | 参数 | 值 |
+| :--: | :--: | :--: |
+| 屋面 | 活荷载标准值 | {max(s0,w0)}×{ZJ}={round(max(s0,w0)*ZJ,2)}kN/m |
+| 钢架 | 吊顶 | {diaoding}×{ZJ}={round(diaoding*ZJ,2)}kN/m |
+| 迎风面 | 柱上q1 | {w0}×{ZJ}×{zuozhu}={round(w0*ZJ*zuozhu,2)}kN/m |
+|  | 横梁上q2 | {w0}×{ZJ}×{zuopo}={round(w0*ZJ*zuopo,2)}kN/m |
+| 背风面 | 柱上q3 |{w0}×{ZJ}×{youzhu}={round(w0*ZJ*youzhu,2)}kN/m  |
+|  | 横梁上q4 | {w0}×{ZJ}×{youpo}={round(w0*ZJ*youpo,2)}kN/m |
 
-# 合并第一列的单元格并添加文本
-for cell in table.columns[0].cells:
-    cell.merge(table.cell(0, 0))
-table.cell(0, 0).text = "各荷载标准值计算"
+"""
+md_str += table_str
 
-# 添加第二列的文本
-table.cell(0, 1).text = "屋面"
-table.cell(1, 1).text = "钢架"
-table.cell(2, 1).merge(table.cell(3, 1))
-table.cell(2, 1).text = "迎风面"
-table.cell(4, 1).merge(table.cell(5, 1))
-table.cell(4, 1).text = "背风面"
 
-# 添加第三列的文本
-table.cell(0, 2).text = "活荷载标准值"
-table.cell(1, 2).text = "吊顶"
-table.cell(2, 2).text = "柱上q1"
-table.cell(3, 2).text = "横梁上q2"
-table.cell(4, 2).text = "柱上q3"
-table.cell(5, 2).text = "横梁上q4"
-# 计算过程
-table.cell(0, 3).text = f"{max(s0,w0)}×{ZJ}={round(max(s0,w0)*ZJ,2)}kN/m"
-table.cell(1, 3).text = f"{diaoding}×{ZJ}={round(diaoding*ZJ,2)}kN/m"
-table.cell(2, 3).text = f"{w0}×{ZJ}×{zuozhu}={round(w0*ZJ*zuozhu,2)}kN/m"
-table.cell(3, 3).text = f"{w0}×{ZJ}×{zuopo}={round(w0*ZJ*zuopo,2)}kN/m"
-table.cell(4, 3).text = f"{w0}×{ZJ}×{youzhu}={round(w0*ZJ*youzhu,2)}kN/m"
-table.cell(5, 3).text = f"{w0}×{ZJ}×{youpo}={round(w0*ZJ*youpo,2)}kN/m"
 q1 = round(w0 * ZJ * zuozhu, 2)
 q2 = round(w0 * ZJ * zuopo, 2)
 q3 = round(w0 * ZJ * youzhu, 2)
 q4 = round(w0 * ZJ * youpo, 2)
 # ----------------------------------------------------------------------------------------------------------------------
-P = "2、恒活荷载、风荷载计算简图"
-# 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = False  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(14)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+P = "## 2、恒活荷载、风荷载计算简图"
+md_str += P
 # ----------------------------------------------------------------------------------------------------------------------
 # 生成图片文件名
-filename1 = f"./image/恒荷载下的计算简图.png"
-filename2 = f"./image/风荷载下的计算简图.png"
+filename1 = "./image/恒荷载下的计算简图.png"
+filename2 = "./image/风荷载下的计算简图.png"
 
 # 插入图片
-docx.paragraphs[9].add_run().add_picture(filename1, width=Inches(6))
-docx.paragraphs[9].add_run().add_picture(filename2, width=Inches(6))
+md_str += f"![恒荷载下的计算简图.png]({filename1})"
+md_str += f"![风荷载下的计算简图.png]({filename2})"
+
 # ----------------------------------------------------------------------------------------------------------------------
-P = "四、内力分析"
-# 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = True  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(16)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+P = "# 四、内力分析"
+md_str += P
+
 # ----------------------------------------------------------------------------------------------------------------------
-P = "1、内力计算"
-# 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = False  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(14)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+P = "## 1、内力计算"
+md_str += P
+
 # ----------------------------------------------------------------------------------------------------------------------
-P = f"""为了简化计算，假设恒荷载沿水平方向分布在梁上，风荷载沿竖直方向分布在柱子上及沿着坡屋顶分布，当遇到左风时，左侧为风压力，右侧为风吸力，且屋面坡度小于30°，左侧风载体形系数为0.6，右侧为-0.5。计算内力时候避免复杂运算，可采取单位力法计算出内力系数(即q=1时，钢架的内力值)，后根据荷载大小进行扩大倍数，最后求出实际内力值。内力系数分布如下图所示。"""
-# 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = False  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(14)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+P = """为了简化计算，假设恒荷载沿水平方向分布在梁上，风荷载沿竖直方向分布在柱子上及沿着坡屋顶分布，当遇到左风时，左侧为风压力，右侧为风吸力，且屋面坡度小于30°，左侧风载体形系数为0.6，右侧为-0.5。计算内力时候避免复杂运算，可采取单位力法计算出内力系数(即q=1时，钢架的内力值)，后根据荷载大小进行扩大倍数，最后求出实际内力值。内力系数分布如下图所示。"""
+md_str += P
+
 # ----------------------------------------------------------------------------------------------------------------------
 # 生成图片文件名
-filename1 = (
-    f"./image/恒活荷载内力系数1.png"
-)
-filename2 = (
-    f"./image/恒活荷载内力系数2.png"
-)
-filename3 = (
-    f"./image/恒活荷载内力系数3.png"
-)
-filename4 = (
-    f"./image/风荷载内力系数1.png"
-)
-filename5 = (
-    f"./image/风荷载内力系数2.png"
-)
-filename6 = (
-    f"./image/风荷载内力系数3.png"
-)
+filename1 = "./image/恒活荷载内力系数1.png"
+filename2 = "./image/恒活荷载内力系数2.png"
+filename3 = "./image/恒活荷载内力系数3.png"
+filename4 = "./image/风荷载内力系数1.png"
+filename5 = "./image/风荷载内力系数2.png"
+filename6 = "./image/风荷载内力系数3.png"
 # 插入图片
-docx.paragraphs[12].add_run().add_picture(filename1, width=Inches(6))
-docx.paragraphs[12].add_run().add_picture(filename2, width=Inches(6))
-docx.paragraphs[12].add_run().add_picture(filename3, width=Inches(6))
-docx.paragraphs[12].add_run().add_picture(filename4, width=Inches(6))
-docx.paragraphs[12].add_run().add_picture(filename5, width=Inches(6))
-docx.paragraphs[12].add_run().add_picture(filename6, width=Inches(6))
+# 插入图片
+md_str += f"![恒荷载下的计算简图.png]({filename1})"
+md_str += f"![风荷载下的计算简图.png]({filename2})"
+md_str += f"![恒荷载下的计算简图.png]({filename3})"
+md_str += f"![风荷载下的计算简图.png]({filename4})"
+md_str += f"![恒荷载下的计算简图.png]({filename5})"
+md_str += f"![风荷载下的计算简图.png]({filename6})"
+
 # ----------------------------------------------------------------------------------------------------------------------
 henghezai = round(diaoding * ZJ, 2)
 huohezai = round(gangjia * ZJ, 2)
@@ -321,67 +144,12 @@ P = f"""恒荷载取{round(diaoding*ZJ,2)}kN/m，活荷载取风荷载和雪荷�
 组合①：1.35×恒荷载+1.5×0.7×活荷载
 组合②：1.3×恒荷载+1.5×活荷载
 组合③：1.3×恒荷载+1.5×0.9×(活荷载+风荷载)"""
-# 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = False  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(14)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+md_str += P
 # ----------------------------------------------------------------------------------------------------------------------
-P = "2、内力组合"
-# 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = False  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(14)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+P = "## 2、内力组合"
+
 # ----------------------------------------------------------------------------------------------------------------------
-# 创建一个13行9列的表格
-table = docx.add_table(rows=13, cols=9)
 
-# 创建所有单元格的变量
-cells = [[table.cell(row, col) for col in range(9)] for row in range(13)]
-
-# 写入第一行的文本
-headings = [
-    "截面",
-    "内力",
-    "恒荷载",
-    "活荷载",
-    "风荷载",
-    "组合①",
-    "组合②",
-    "组合③",
-    "最不利组合",
-]
-for i, heading in enumerate(headings):
-    cells[0][i].text = heading
-
-# 合并第一列的几个单元格并写入文本
-for start_row, end_row, text in [
-    (1, 3, "柱A"),
-    (4, 6, "柱B"),
-    (7, 9, "梁B"),
-    (10, 12, "梁C"),
-]:
-    cell_start = cells[start_row][0]
-    cell_end = cells[end_row][0]
-    cell_merge = cell_start.merge(cell_end)
-    cell_merge.text = text
 
 # 定义计算系数
 ZAM = ZAN = ZAQ = ZBM = ZBN = ZBQ = LBM = LBN = LBQ = LCM = LCN = LCQ = 1  # 恒活荷载
@@ -489,155 +257,159 @@ if KD == 15:
     LCN1 = 1.23
     LCQ1 = 2.98
 
-# 第二列内力符号
-cells[1][1].text = f"M"
-cells[2][1].text = f"N"
-cells[3][1].text = f"Q"
-cells[4][1].text = f"M"
-cells[5][1].text = f"N"
-cells[6][1].text = f"Q"
-cells[7][1].text = f"M"
-cells[8][1].text = f"N"
-cells[9][1].text = f"Q"
-cells[10][1].text = f"M"
-cells[11][1].text = f"N"
-cells[12][1].text = f"Q"
 
-# 第三列恒荷载
-cells[1][2].text = f"{round(henghezai*ZAM,2)}"  # ZAM
-cells[2][2].text = f"{round(henghezai*ZAN,2)}"  # ZAN
-cells[3][2].text = f"{round(henghezai*ZAQ,2)}"  # ZAQ
-cells[4][2].text = f"{round(henghezai*ZBM,2)}"  # ZBM
-cells[5][2].text = f"{round(henghezai*ZBN,2)}"  # ZBN
-cells[6][2].text = f"{round(henghezai*ZBQ,2)}"  # ZBQ
-cells[7][2].text = f"{round(henghezai*LBM,2)}"  # LBM
-cells[8][2].text = f"{round(henghezai*LBN,2)}"  # LBN
-cells[9][2].text = f"{round(henghezai*LBQ,2)}"  # LBQ
-cells[10][2].text = f"{round(henghezai*LCM,2)}"  # LCM
-cells[11][2].text = f"{round(henghezai*LCN,2)}"  # LCN
-cells[12][2].text = f"{round(henghezai*LCQ,2)}"  # LCQ
+# 假设你有以下数据列表，其中每个子列表代表表格中的一行
+data = {
+    "截面": [
+        "柱A",
+        "",
+        "",
+        "柱B",
+        "",
+        "",
+        "柱B",
+        "",
+        "",
+        "梁C",
+        "",
+        "",
+    ],
+    "内力": [
+        "M",
+        "N",
+        "Q",
+        "M",
+        "N",
+        "Q",
+        "M",
+        "N",
+        "Q",
+        "M",
+        "N",
+        "Q",
+    ],
+    "恒荷载": [
+        round(henghezai * ZAM, 2),
+        round(henghezai * ZAN, 2),
+        round(henghezai * ZAQ, 2),
+        round(henghezai * ZBM, 2),
+        round(henghezai * ZBN, 2),
+        round(henghezai * ZBQ, 2),
+        round(henghezai * LBM, 2),
+        round(henghezai * LBN, 2),
+        round(henghezai * LBQ, 2),
+        round(henghezai * LCM, 2),
+        round(henghezai * LCN, 2),
+        round(henghezai * LCQ, 2),
+    ],
+    "活荷载": [
+        round(huohezai * ZAM, 2),
+        round(huohezai * ZAN, 2),
+        round(huohezai * ZAQ, 2),
+        round(huohezai * ZBM, 2),
+        round(huohezai * ZBN, 2),
+        round(huohezai * ZBQ, 2),
+        round(huohezai * LBM, 2),
+        round(huohezai * LBN, 2),
+        round(huohezai * LBQ, 2),
+        round(huohezai * LCM, 2),
+        round(huohezai * LCN, 2),
+        round(huohezai * LCQ, 2),
+    ],
+    "风荷载": [
+        round(q1 * ZAM1, 2),
+        round(q1 * ZAN1, 2),
+        round(q1 * ZAQ1, 2),
+        round(q1 * ZBM1, 2),
+        round(q1 * ZBN1, 2),
+        round(q1 * ZBQ1, 2),
+        round(q2 * LBM1, 2),
+        round(q2 * LBN1, 2),
+        round(q2 * LBQ1, 2),
+        round(q2 * LCM1, 2),
+        round(q2 * LCN1, 2),
+        round(q2 * LCQ1, 2),
+    ],
+    "组合①": [
+        round(1.35 * henghezai * ZAM + 1.5 * 0.7 * huohezai * ZAM, 2),
+        round(1.35 * henghezai * ZAN + 1.5 * 0.7 * huohezai * ZAN, 2),
+        round(1.35 * henghezai * ZAQ + 1.5 * 0.7 * huohezai * ZAQ, 2),
+        round(1.35 * henghezai * ZBM + 1.5 * 0.7 * huohezai * ZBM, 2),
+        round(1.35 * henghezai * ZBN + 1.5 * 0.7 * huohezai * ZBN, 2),
+        round(1.35 * henghezai * ZBQ + 1.5 * 0.7 * huohezai * ZBQ, 2),
+        round(1.35 * henghezai * LBM + 1.5 * 0.7 * huohezai * LBM, 2),
+        round(1.35 * henghezai * LBN + 1.5 * 0.7 * huohezai * LBN, 2),
+        round(1.35 * henghezai * LBQ + 1.5 * 0.7 * huohezai * LBQ, 2),
+        round(1.35 * henghezai * LCM + 1.5 * 0.7 * huohezai * LCM, 2),
+        round(1.35 * henghezai * LCN + 1.5 * 0.7 * huohezai * LCN, 2),
+        round(1.35 * henghezai * LCQ + 1.5 * 0.7 * huohezai * LCQ, 2),
+    ],
+    "组合②": [
+        round(1.3 * henghezai * ZAM + 1.5 * huohezai * ZAM, 2),
+        round(1.3 * henghezai * ZAN + 1.5 * huohezai * ZAN, 2),
+        round(1.3 * henghezai * ZAQ + 1.5 * huohezai * ZAQ, 2),
+        round(1.3 * henghezai * ZBM + 1.5 * huohezai * ZBM, 2),
+        round(1.3 * henghezai * ZBN + 1.5 * huohezai * ZBN, 2),
+        round(1.3 * henghezai * ZBQ + 1.5 * huohezai * ZBQ, 2),
+        round(1.3 * henghezai * LBM + 1.5 * huohezai * LBM, 2),
+        round(1.3 * henghezai * LBN + 1.5 * huohezai * LBN, 2),
+        round(1.3 * henghezai * LBQ + 1.5 * huohezai * LBQ, 2),
+        round(1.3 * henghezai * LCM + 1.5 * huohezai * LCM, 2),
+        round(1.3 * henghezai * LCN + 1.5 * huohezai * LCN, 2),
+        round(1.3 * henghezai * LCQ + 1.5 * huohezai * LCQ, 2),
+    ],
+    "组合③": [
+        round(1.3 * henghezai * ZAM + 1.5 * 0.9 * (huohezai * ZAM + q1 * ZAM), 2),
+        round(1.3 * henghezai * ZAN + 1.5 * 0.9 * (huohezai * ZAN + q1 * ZAN), 2),
+        round(1.3 * henghezai * ZAQ + 1.5 * 0.9 * (huohezai * ZAQ + q1 * ZAQ), 2),
+        round(1.3 * henghezai * ZBM + 1.5 * 0.9 * (huohezai * ZBM + q1 * ZBM), 2),
+        round(1.3 * henghezai * ZBN + 1.5 * 0.9 * (huohezai * ZBN + q1 * ZBN), 2),
+        round(1.3 * henghezai * ZBQ + 1.5 * 0.9 * (huohezai * ZBQ + q1 * ZBQ), 2),
+        round(1.3 * henghezai * LBM + 1.5 * 0.9 * (huohezai * LBM + q2 * LBM), 2),
+        round(1.3 * henghezai * LBN + 1.5 * 0.9 * (huohezai * LBN + q2 * LBN), 2),
+        round(1.3 * henghezai * LBQ + 1.5 * 0.9 * (huohezai * LBQ + q2 * LBQ), 2),
+        round(1.3 * henghezai * LCM + 1.5 * 0.9 * (huohezai * LCM + q2 * LCM), 2),
+        round(1.3 * henghezai * LCN + 1.5 * 0.9 * (huohezai * LCN + q2 * LCN), 2),
+        round(1.3 * henghezai * LCQ + 1.5 * 0.9 * (huohezai * LCQ + q2 * LCQ), 2),
+    ],
+    "最不利组合": ["row1 col3", "row2 col3", "row3 col3"],
+}
 
-# 第四列活荷载
-cells[1][3].text = f"{round(huohezai*ZAM,2)}"  # ZAM
-cells[2][3].text = f"{round(huohezai*ZAN,2)}"  # ZAN
-cells[3][3].text = f"{round(huohezai*ZAQ,2)}"  # ZAQ
-cells[4][3].text = f"{round(huohezai*ZBM,2)}"  # ZBM
-cells[5][3].text = f"{round(huohezai*ZBN,2)}"  # ZBN
-cells[6][3].text = f"{round(huohezai*ZBQ,2)}"  # ZBQ
-cells[7][3].text = f"{round(huohezai*LBM,2)}"  # LBM
-cells[8][3].text = f"{round(huohezai*LBN,2)}"  # LBN
-cells[9][3].text = f"{round(huohezai*LBQ,2)}"  # LBQ
-cells[10][3].text = f"{round(huohezai*LCM,2)}"  # LCM
-cells[11][3].text = f"{round(huohezai*LCN,2)}"  # LCN
-cells[12][3].text = f"{round(huohezai*LCQ,2)}"  # LCQ
-
-# 第五列风荷载
-cells[1][4].text = f"{round(q1*ZAM1,2)}"  # ZAM1
-cells[2][4].text = f"{round(q1*ZAN1,2)}"  # ZAN1
-cells[3][4].text = f"{round(q1*ZAQ1,2)}"  # ZAQ1
-cells[4][4].text = f"{round(q1*ZBM1,2)}"  # ZBM1
-cells[5][4].text = f"{round(q1*ZBN1,2)}"  # ZBN1
-cells[6][4].text = f"{round(q1*ZBQ1,2)}"  # ZBQ1
-cells[7][4].text = f"{round(q2*LBM1,2)}"  # LBM1
-cells[8][4].text = f"{round(q2*LBN1,2)}"  # LBN1
-cells[9][4].text = f"{round(q2*LBQ1,2)}"  # LBQ1
-cells[10][4].text = f"{round(q2*LCM1,2)}"  # LCM1
-cells[11][4].text = f"{round(q2*LCN1,2)}"  # LCN1
-cells[12][4].text = f"{round(q2*LCQ1,2)}"  # LCQ1
-
-# 第六列组合1
-cells[1][5].text = f"{round(1.35*henghezai*ZAM + 1.5*0.7*huohezai*ZAM,2)}"  # ZAM
-cells[2][5].text = f"{round(1.35*henghezai*ZAN + 1.5*0.7*huohezai*ZAN,2)}"  # ZAN
-cells[3][5].text = f"{round(1.35*henghezai*ZAQ + 1.5*0.7*huohezai*ZAQ,2)}"  # ZAQ
-cells[4][5].text = f"{round(1.35*henghezai*ZBM + 1.5*0.7*huohezai*ZBM,2)}"  # ZBM
-cells[5][5].text = f"{round(1.35*henghezai*ZBN + 1.5*0.7*huohezai*ZBN,2)}"  # ZBN
-cells[6][5].text = f"{round(1.35*henghezai*ZBQ + 1.5*0.7*huohezai*ZBQ,2)}"  # ZBQ
-cells[7][5].text = f"{round(1.35*henghezai*LBM + 1.5*0.7*huohezai*LBM,2)}"  # LBM
-cells[8][5].text = f"{round(1.35*henghezai*LBN + 1.5*0.7*huohezai*LBN,2)}"  # LBN
-cells[9][5].text = f"{round(1.35*henghezai*LBQ + 1.5*0.7*huohezai*LBQ,2)}"  # LBQ
-cells[10][5].text = f"{round(1.35*henghezai*LCM + 1.5*0.7*huohezai*LCM,2)}"  # LCM
-cells[11][5].text = f"{round(1.35*henghezai*LCN + 1.5*0.7*huohezai*LCN,2)}"  # LCN
-cells[12][5].text = f"{round(1.35*henghezai*LCQ + 1.5*0.7*huohezai*LCQ,2)}"  # LCQ
-
-# 第七列组合2
-cells[1][6].text = f"{round(1.3*henghezai*ZAM + 1.5*huohezai*ZAM,2)}"  # ZAM
-cells[2][6].text = f"{round(1.3*henghezai*ZAN + 1.5*huohezai*ZAN,2)}"  # ZAN
-cells[3][6].text = f"{round(1.3*henghezai*ZAQ + 1.5*huohezai*ZAQ,2)}"  # ZAQ
-cells[4][6].text = f"{round(1.3*henghezai*ZBM + 1.5*huohezai*ZBM,2)}"  # ZBM
-cells[5][6].text = f"{round(1.3*henghezai*ZBN + 1.5*huohezai*ZBN,2)}"  # ZBN
-cells[6][6].text = f"{round(1.3*henghezai*ZBQ + 1.5*huohezai*ZBQ,2)}"  # ZBQ
-cells[7][6].text = f"{round(1.3*henghezai*LBM + 1.5*huohezai*LBM,2)}"  # LBM
-cells[8][6].text = f"{round(1.3*henghezai*LBN + 1.5*huohezai*LBN,2)}"  # LBN
-cells[9][6].text = f"{round(1.3*henghezai*LBQ + 1.5*huohezai*LBQ,2)}"  # LBQ
-cells[10][6].text = f"{round(1.3*henghezai*LCM + 1.5*huohezai*LCM,2)}"  # LCM
-cells[11][6].text = f"{round(1.3*henghezai*LCN + 1.5*huohezai*LCN,2)}"  # LCN
-cells[12][6].text = f"{round(1.3*henghezai*LCQ + 1.5*huohezai*LCQ,2)}"  # LCQ
-
-# 第八列组合3
-cells[1][
-    7
-].text = f"{round(1.3*henghezai*ZAM + 1.5*0.9*(huohezai*ZAM + q1*ZAM),2)}"  # ZAM
-cells[2][
-    7
-].text = f"{round(1.3*henghezai*ZAN + 1.5*0.9*(huohezai*ZAN + q1*ZAN),2)}"  # ZAN
-cells[3][
-    7
-].text = f"{round(1.3*henghezai*ZAQ + 1.5*0.9*(huohezai*ZAQ + q1*ZAQ),2)}"  # ZAQ
-cells[4][
-    7
-].text = f"{round(1.3*henghezai*ZBM + 1.5*0.9*(huohezai*ZBM + q1*ZBM),2)}"  # ZBM
-cells[5][
-    7
-].text = f"{round(1.3*henghezai*ZBN + 1.5*0.9*(huohezai*ZBN + q1*ZBN),2)}"  # ZBN
-cells[6][
-    7
-].text = f"{round(1.3*henghezai*ZBQ + 1.5*0.9*(huohezai*ZBQ + q1*ZBQ),2)}"  # ZBQ
-cells[7][
-    7
-].text = f"{round(1.3*henghezai*LBM + 1.5*0.9*(huohezai*LBM + q2*LBM),2)}"  # LBM
-cells[8][
-    7
-].text = f"{round(1.3*henghezai*LBN + 1.5*0.9*(huohezai*LBN + q2*LBN),2)}"  # LBN
-cells[9][
-    7
-].text = f"{round(1.3*henghezai*LBQ + 1.5*0.9*(huohezai*LBQ + q2*LBQ),2)}"  # LBQ
-cells[10][
-    7
-].text = f"{round(1.3*henghezai*LCM + 1.5*0.9*(huohezai*LCM + q2*LCM),2)}"  # LCM
-cells[11][
-    7
-].text = f"{round(1.3*henghezai*LCN + 1.5*0.9*(huohezai*LCN + q2*LCN),2)}"  # LCN
-cells[12][
-    7
-].text = f"{round(1.3*henghezai*LCQ + 1.5*0.9*(huohezai*LCQ + q2*LCQ),2)}"  # LCQ
-
-# 最不利组合内力设计值选取
-# 第九列 - 最不利组合
-for i in range(1, 13):
+zuibulizuhe = list()
+for i in range(12):
     # 计算前三种组合的绝对值最大值
     max_value = max(
-        abs(float(cells[i][5].text)),
-        abs(float(cells[i][6].text)),
-        abs(float(cells[i][7].text)),
+        abs(data["组合①"][i]),
+        abs(data["组合②"][i]),
+        abs(data["组合③"][i]),
     )
+    zuibulizuhe.append(round(max_value, 2))
 
-    # 将最大值写入第九列
-    cells[i][8].text = f"{round(max_value, 2)}"
+data["最不利组合"] = zuibulizuhe
+
+# 转换为按行组织的数据
+rows = list(zip(*[data[key] for key in data]))
+from tabulate import tabulate
+
+# 使用tabulate创建Markdown表格
+headers = list(data.keys())
+markdown_table = tabulate(rows, headers=headers, tablefmt="pipe")
+md_str += markdown_table
+
 # 定义最不利截面设计值
-ZAMmax = round(float(cells[1][8].text), 2)
-ZANmax = round(float(cells[2][8].text), 2)
-ZAQmax = round(float(cells[3][8].text), 2)
-ZBMmax = round(float(cells[4][8].text), 2)
-ZBNmax = round(float(cells[5][8].text), 2)
-ZBQmax = round(float(cells[6][8].text), 2)
-LBMmax = round(float(cells[7][8].text), 2)
-LBNmax = round(float(cells[8][8].text), 2)
-LBQmax = round(float(cells[9][8].text), 2)
-LCMmax = round(float(cells[10][8].text), 2)
-LCNmax = round(float(cells[11][8].text), 2)
-LCQmax = round(float(cells[12][8].text), 2)
+ZAMmax = zuibulizuhe[0]
+ZANmax = zuibulizuhe[1]
+ZAQmax = zuibulizuhe[2]
+ZBMmax = zuibulizuhe[3]
+ZBNmax = zuibulizuhe[4]
+ZBQmax = zuibulizuhe[5]
+LBMmax = zuibulizuhe[6]
+LBNmax = zuibulizuhe[7]
+LBQmax = zuibulizuhe[8]
+LCMmax = zuibulizuhe[9]
+LCNmax = zuibulizuhe[10]
+LCQmax = zuibulizuhe[11]
 
-# 找出最大的一个数
 max_value = max(
     ZAMmax,
     ZANmax,
@@ -652,39 +424,16 @@ max_value = max(
     LCNmax,
     LCQmax,
 )
-
 # 内力最大值，用于选择H型钢
 neilizuidazhi = max_value
 # ----------------------------------------------------------------------------------------------------------------------
 P = "五、钢架设计"
 # 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = True  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(16)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+md_str += P
 # ----------------------------------------------------------------------------------------------------------------------
 P = "1、截面设计"
-# 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = False  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(14)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+md_str += P
+
 # ----------------------------------------------------------------------------------------------------------------------
 # 选择H型钢型号
 mingcheng = "这里是H型钢名称"
@@ -746,55 +495,27 @@ if mingcheng == "HN500×200×10×16":
     tw = 10
 # ----------------------------------------------------------------------------------------------------------------------
 P = f"""梁柱均选用{mingcheng}，截面特性为A={A}mm²，b={b}mm，t={t}mm，Ix={Ix}mm⁴，Wx={Wx}cm³，ix={ix}cm，Iy={Iy}mm⁴，Wy={Wy}cm³，iy={iy}cm。"""
-# 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = False  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(14)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+md_str += P
+
+
 # ----------------------------------------------------------------------------------------------------------------------
 P = "2、构件验算"
-# 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = False  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(14)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+md_str += P
 # ----------------------------------------------------------------------------------------------------------------------
 b_t = b / t
 hw_tw = hw / tw
 P = f"""构件宽厚比的验算：
 翼缘部分：
+$$
 \\frac{{b}}{{t}}=\\frac{{{b}}}{{{t}}}={b_t:.2f}<15\\sqrt{{\\frac{{{fy}}}{{f_y}}}}=15
+$$
 腹板部分：
-\\frac{{h_w}}{{t_w}}=\\frac{{{hw}}}{{{tw}}}={hw_tw:.1f}<250\\sqrt{{\\frac{{{fy}}}{{f_y}}}}=250"""
-# 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = False  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(14)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+$$
+\\frac{{h_w}}{{t_w}}=\\frac{{{hw}}}{{{tw}}}={hw_tw:.1f}<250\\sqrt{{\\frac{{{fy}}}{{f_y}}}}=250
+$$
+"""
+md_str += P
+
 # ----------------------------------------------------------------------------------------------------------------------
 import numpy as np
 
@@ -1037,6 +758,7 @@ phi_values = np.array(
         0.201,
     ]
 )
+phi_values = np.array(list(frange(1, 0.2, -0.002)))
 # 定义λ的值
 lamuda = lambda_x_result
 
@@ -1075,200 +797,9 @@ l_y = 1200
 lambda_y_result = l_y / 10 / iy
 
 # 定义一维数组，包含了你给出的长细比λ与稳定系数φ的对应关系
-phi_values = np.array(
-    [
-        1,
-        0.997,
-        0.995,
-        0.992,
-        0.989,
-        0.987,
-        0.984,
-        0.981,
-        0.979,
-        0.976,
-        0.974,
-        0.971,
-        0.968,
-        0.966,
-        0.963,
-        0.96,
-        0.958,
-        0.955,
-        0.952,
-        0.949,
-        0.947,
-        0.944,
-        0.941,
-        0.938,
-        0.936,
-        0.933,
-        0.93,
-        0.927,
-        0.924,
-        0.921,
-        0.918,
-        0.915,
-        0.912,
-        0.909,
-        0.906,
-        0.903,
-        0.899,
-        0.896,
-        0.893,
-        0.889,
-        0.886,
-        0.882,
-        0.879,
-        0.875,
-        0.872,
-        0.868,
-        0.864,
-        0.861,
-        0.858,
-        0.855,
-        0.852,
-        0.849,
-        0.846,
-        0.843,
-        0.839,
-        0.836,
-        0.832,
-        0.829,
-        0.825,
-        0.822,
-        0.818,
-        0.814,
-        0.81,
-        0.806,
-        0.802,
-        0.797,
-        0.793,
-        0.789,
-        0.784,
-        0.779,
-        0.775,
-        0.77,
-        0.765,
-        0.76,
-        0.755,
-        0.75,
-        0.744,
-        0.739,
-        0.733,
-        0.728,
-        0.722,
-        0.716,
-        0.71,
-        0.704,
-        0.698,
-        0.692,
-        0.686,
-        0.68,
-        0.673,
-        0.667,
-        0.661,
-        0.654,
-        0.648,
-        0.641,
-        0.634,
-        0.626,
-        0.618,
-        0.611,
-        0.603,
-        0.595,
-        0.588,
-        0.58,
-        0.573,
-        0.566,
-        0.558,
-        0.551,
-        0.544,
-        0.537,
-        0.53,
-        0.523,
-        0.516,
-        0.509,
-        0.502,
-        0.496,
-        0.489,
-        0.483,
-        0.476,
-        0.47,
-        0.464,
-        0.458,
-        0.452,
-        0.446,
-        0.44,
-        0.434,
-        0.428,
-        0.423,
-        0.417,
-        0.412,
-        0.406,
-        0.401,
-        0.396,
-        0.391,
-        0.386,
-        0.381,
-        0.376,
-        0.371,
-        0.367,
-        0.362,
-        0.357,
-        0.353,
-        0.349,
-        0.344,
-        0.34,
-        0.336,
-        0.332,
-        0.328,
-        0.324,
-        0.32,
-        0.316,
-        0.312,
-        0.308,
-        0.305,
-        0.301,
-        0.298,
-        0.294,
-        0.291,
-        0.287,
-        0.284,
-        0.281,
-        0.277,
-        0.274,
-        0.271,
-        0.268,
-        0.265,
-        0.262,
-        0.259,
-        0.256,
-        0.253,
-        0.251,
-        0.248,
-        0.245,
-        0.243,
-        0.24,
-        0.237,
-        0.235,
-        0.232,
-        0.23,
-        0.227,
-        0.225,
-        0.223,
-        0.22,
-        0.218,
-        0.216,
-        0.214,
-        0.211,
-        0.209,
-        0.207,
-        0.205,
-        0.203,
-        0.201,
-    ]
-)
+phi_values = np.array(list(frange(1, 0.2, -0.002)))
+
+
 # 定义λ的值
 lamuda = lambda_y_result
 
@@ -1298,50 +829,58 @@ beta_t = 1.0 - N / N_result_kN + 0.75 * (N / N_result_kN) ** 2
 result2 = N / (phi_y * A) + (beta_t * max(LBMmax, LCMmax) * 1000) / (Wx * faibyipie)
 
 P = f"""钢架梁的验算:
-内力设计值V_{{max}}={fv}kN
+内力设计值$V_{{max}}={fv}kN$
 ①抗剪强度验算(考虑仅有支座加劲肋)：
+$$
 \\lambda_s=\\frac{{{{hw}}/{{tw}}}}{{41\\sqrt{{5.34}}}}\\sqrt{{\\frac{{fy}}{{235}}}}=\\frac{{{hw}/{tw}}}{{41\\sqrt{{5.34}}}}={round((hw/tw)/(41*5.34**0.5)*(fy/235)**0.5,2)}<0.8
+$$
 则极限承载力：
+$$
 V_u=h_w\\times t_w\\times f_v={hw}\\times{tw}\\times125={hw_tw_fv/1000}kN>{fv}kN
+$$
 满足要求。
 ②弯、剪、压共同作用下的验算：
 取梁端截面：
+$$
 N={max(LBNmax,LCNmax)}kN，V={max(LBQmax,LCQmax)}kN，M={max(LBMmax,LCMmax)}kN·m，\\text{{又因}}V<0.5V_u，\\text{{取}}V=0.5V_u={round(0.5*Vu/1000,2)}kN
 M_f=\\left(A_{{f1}}\\times\\frac{{h_1^2}}{{h_2}}+A_{{f2}}\\times h_2\\right)\\times\\left(f-\\frac{{N}}{{A}}\\right)=\\left({Af1}\\times\\frac{{{h1}^2}}{{{h2}}}+{Af2}\\times {h2}\\right)\\times\\left({f}-\\frac{{{N}}}{{{round(A/100,2)}}}\\right)={result}kN·m＞{max(LBMmax,LCMmax)}kN·m
 M_f＞M，\\text{{取}}M=M_f={Mf}kN·m,\\text{{故：}}
 \\left(\\frac{{V}}{{0.5\\times V_u}}-1\\right)^2+\\frac{{M-M_f}}{{M_{{eu}}-M_f}}=\\left(\\frac{{{V}}}{{0.5\\times{Vu}}}-1\\right)^2+\\frac{{{M}-{Mf}}}{{{Meu}-{Mf}}}={total_result}<1
+$$
 满足要求。
 ③整体稳定性验算:
 1)梁平面内稳定验算
+$$
 \\text{{计算长度取横梁长度}}l_x={KD*1000}mm。
 \\lambda_x=\\frac{{l_x}}{{i_x}}=\\frac{{{l_x/10}}}{{{ix}}}={lambda_x_result}<[\\lambda]=150,\\text{{b类截面，查表得}}φ_x={phi_x}
 N^' = \\frac{{\\pi^2 \\times E \\times A}}{{1.1 \\times \\lambda^2}} = \\frac{{3.14^2 \\times {E_A} \\times 10^6 \\times {A}}}{{1.1 \\times {lambda_x_result}^2}}={N_result_kN:.2f}kN,\\text{{取}}\\beta_{{mx}}={beta_mx}
+$$
 则弯剪压共同作用下最大应力：
+$$
 \\frac{{N}}{{\\varphi_x \\times A}} + \\frac{{\\beta_{{mx}} \\times M_x}}{{W_{{e1}} \\times \\left(1-\\varphi_x \\times \\frac{{N}}{{N'}}\\right)}} = \\frac{{{N}}}{{{phi_x} \\times {A}}} + \\frac{{{beta_mx} \\times {Mx*1000}}}{{{W_e1} \\times \\left(1-{phi_x} \\times \\frac{{{N}}}{{{round(N_result_kN,2)}}}\\right)}} = {total_result1:.2f}N/mm^2 < f = {f}N/mm^2
+$$
 满足要求。
 2)梁平面外稳定验算
 考虑蒙皮效应，两个檩条间距不小于1200mm，计算长度按两个檩距考虑，即：
+$$
 l_y={2*l_y}mm，\\text{{对于等截面构件}}\gamma=0，μ_s=μ_w=1。
 \\lambda_y=\\frac{{l_y}}{{i_y}}=\\frac{{{l_y/10}}}{{{iy}}}={lambda_y_result:.1f}，\\text{{是b类截面，查表得}}φ_y={phi_y}。
+$$
+$$
 \\varphi_{{by}}=\\frac{{4320}}{{{{\\lambda_y}}^2}}\\times\\frac{{A\\times h_w}}{{W_x\\times{{10}}^3}}\\times\\sqrt{{\\left(\\frac{{\\lambda_y\\times t}}{{4.4\\times h_w}}\\right)^2}}=\\frac{{4320}}{{{{{round(lamudayjieguo, 2)}}}^2}}\\times\\frac{{{A*100}\\times{hw}}}{{{Wx}\\times{{10}}^3}}\\times\\sqrt{{\\left(\\frac{{{round(lamudayjieguo, 2)}\\times{t}}}{{4.4\\times{hw}}}\\right)^2}}={phi_by_result:.1f}＞0.6
+$$
+$$
 \\text{{则取}}{{\\varphi_b}}^'=1.07-0.282/\\varphi_{{by}}={faibyipie}
+$$
+$$
 \\beta_t=1.0-\\frac{{N}}{{N\\prime}}+0.75\\times\\left(\\frac{{N}}{{N\\prime}}\\right)^2=1.0-\\frac{{{N}}}{{{round(N_result_kN,2)}}}+0.75\\times\\left(\\frac{{{N}}}{{{round(N_result_kN,2)}}}\\right)^2={beta_t:.3f}
-\\frac{{N}}{{\\varphi_y\\times A}}+\\frac{{\\beta_t\\times M}}{{Wx\\times\\varphi_b^'}}=\\frac{{{N}}}{{{phi_y}\\times{A}}}+\\frac{{{round(beta_t,3)}\\times{max(LBMmax,LCMmax)*1000}}}{{{Wx}\\times{faibyipie}}}={result2:.2f}N/mm^2<f={f}N/mm^2"""
-# 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = False  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(14)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+$$
+$$
+\\frac{{N}}{{\\varphi_y\\times A}}+\\frac{{\\beta_t\\times M}}{{Wx\\times\\varphi_b^'}}=\\frac{{{N}}}{{{phi_y}\\times{A}}}+\\frac{{{round(beta_t,3)}\\times{max(LBMmax,LCMmax)*1000}}}{{{Wx}\\times{faibyipie}}}={result2:.2f}N/mm^2<f={f}N/mm^2
+$$
+"""
+md_str += P
 # ----------------------------------------------------------------------------------------------------------------------
-import numpy as np
 
 Vzhuzi = round(max(ZAQmax, ZBQmax), 2)
 
@@ -1592,201 +1131,18 @@ total_result1 = round(left_result1 + right_result1, 2)
 
 import numpy as np
 
+# 定义一个函数来模拟 range 函数，但是适用于浮点数
+
+# 设定起始值、结束值和步长
+start = 1
+stop = 0.2
+step = -0.002
+
+# 使用列表推导式生成列表，包括起始值和结束值
+numbers = [round(i, 3) for i in frange(start, stop, step)]
+
 # 定义一维数组，包含了你给出的长细比λ与稳定系数φ的对应关系
-phi_values = np.array(
-    [
-        1,
-        0.997,
-        0.995,
-        0.992,
-        0.989,
-        0.987,
-        0.984,
-        0.981,
-        0.979,
-        0.976,
-        0.974,
-        0.971,
-        0.968,
-        0.966,
-        0.963,
-        0.96,
-        0.958,
-        0.955,
-        0.952,
-        0.949,
-        0.947,
-        0.944,
-        0.941,
-        0.938,
-        0.936,
-        0.933,
-        0.93,
-        0.927,
-        0.924,
-        0.921,
-        0.918,
-        0.915,
-        0.912,
-        0.909,
-        0.906,
-        0.903,
-        0.899,
-        0.896,
-        0.893,
-        0.889,
-        0.886,
-        0.882,
-        0.879,
-        0.875,
-        0.872,
-        0.868,
-        0.864,
-        0.861,
-        0.858,
-        0.855,
-        0.852,
-        0.849,
-        0.846,
-        0.843,
-        0.839,
-        0.836,
-        0.832,
-        0.829,
-        0.825,
-        0.822,
-        0.818,
-        0.814,
-        0.81,
-        0.806,
-        0.802,
-        0.797,
-        0.793,
-        0.789,
-        0.784,
-        0.779,
-        0.775,
-        0.77,
-        0.765,
-        0.76,
-        0.755,
-        0.75,
-        0.744,
-        0.739,
-        0.733,
-        0.728,
-        0.722,
-        0.716,
-        0.71,
-        0.704,
-        0.698,
-        0.692,
-        0.686,
-        0.68,
-        0.673,
-        0.667,
-        0.661,
-        0.654,
-        0.648,
-        0.641,
-        0.634,
-        0.626,
-        0.618,
-        0.611,
-        0.603,
-        0.595,
-        0.588,
-        0.58,
-        0.573,
-        0.566,
-        0.558,
-        0.551,
-        0.544,
-        0.537,
-        0.53,
-        0.523,
-        0.516,
-        0.509,
-        0.502,
-        0.496,
-        0.489,
-        0.483,
-        0.476,
-        0.47,
-        0.464,
-        0.458,
-        0.452,
-        0.446,
-        0.44,
-        0.434,
-        0.428,
-        0.423,
-        0.417,
-        0.412,
-        0.406,
-        0.401,
-        0.396,
-        0.391,
-        0.386,
-        0.381,
-        0.376,
-        0.371,
-        0.367,
-        0.362,
-        0.357,
-        0.353,
-        0.349,
-        0.344,
-        0.34,
-        0.336,
-        0.332,
-        0.328,
-        0.324,
-        0.32,
-        0.316,
-        0.312,
-        0.308,
-        0.305,
-        0.301,
-        0.298,
-        0.294,
-        0.291,
-        0.287,
-        0.284,
-        0.281,
-        0.277,
-        0.274,
-        0.271,
-        0.268,
-        0.265,
-        0.262,
-        0.259,
-        0.256,
-        0.253,
-        0.251,
-        0.248,
-        0.245,
-        0.243,
-        0.24,
-        0.237,
-        0.235,
-        0.232,
-        0.23,
-        0.227,
-        0.225,
-        0.223,
-        0.22,
-        0.218,
-        0.216,
-        0.214,
-        0.211,
-        0.209,
-        0.207,
-        0.205,
-        0.203,
-        0.201,
-    ]
-)
+phi_values = np.array(numbers)
 # 定义λ的值
 lamuda = lambda_y_result
 
@@ -1827,118 +1183,119 @@ kesai1 = xi_t
 mu = (W_k * 10**3 * zhugao**3) / (12 * E_A * 10**3 * Ix * 10**4) * (2 + kesai1)
 
 P = f"""钢架柱的验算:
-内力设计值V_{{max}}={Vzhuzi}kN
+内力设计值$V_{{max}}={Vzhuzi}kN$
 ①抗剪强度验算(考虑仅有支座加劲肋)：
+$$
 \\lambda_s=\\frac{{{{hw}}/{{tw}}}}{{41\\sqrt{{5.34}}}}\\sqrt{{\\frac{{fy}}{{235}}}}=\\frac{{{hw}/{tw}}}{{41\\sqrt{{5.34}}}}={round((hw/tw)/(41*5.34**0.5)*(fy/235)**0.5,2)}<0.8
+$$
 则极限承载力：
+$$
 V_u=h_w\\times t_w\\times f_v={hw}\\times{tw}\\times125={hw_tw_fv/1000}kN>{Vzhuzi}kN
+$$
 满足要求。
 ②弯、剪、压共同作用下的验算：
 取柱端截面：
+$$
 N={max(ZANmax,ZBNmax)}kN，V={max(ZAQmax,ZBQmax)}kN，M={max(ZAMmax,ZBMmax)}kN·m，\\text{{又因}}V<0.5V_u，\\text{{取}}V=0.5V_u={round(0.5*Vu/1000,2)}kN
+$$
+$$
 M_f=\\left(A_{{f1}}\\times\\frac{{h_1^2}}{{h_2}}+A_{{f2}}\\times h_2\\right)\\times\\left(f-\\frac{{N}}{{A}}\\right)=\\left({Af1}\\times\\frac{{{h1}^2}}{{{h2}}}+{Af2}\\times {h2}\\right)\\times\\left({fy}-\\frac{{{N}}}{{{round(A/100,2)}}}\\right)={result11}kN·m＞{max(ZAMmax,ZBMmax)}kN·m
+$$
+$$
 M_f＞M，\\text{{取}}M=M_f={result11}kN·m，\\text{{故：}}
 \\left(\\frac{{V}}{{0.5\\times V_u}}-1\\right)^2+\\frac{{M-M_f}}{{M_{{eu}}-M_f}}=\\left(\\frac{{{V}}}{{0.5\\times{Vu}}}-1\\right)^2+\\frac{{{M}-{Mf}}}{{{Meu}-{Mf}}}={total_result11}<1
+$$
 满足要求。
 ③整体稳定性验算:
 1)柱平面内稳定验算
+$$
 \\text{{钢架柱高}}H={zhugao}mm，\\text{{梁长}}L={liangchang}mm。
+$$
 柱的线刚度：
+$$
 k_1=\\frac{{I_a}}{{h}}=\\frac{{{Ia}\\times10^4}}{{{zhugao}}}={k1_result}mm³
+$$
 梁的线刚度:
+$$
 k_2=\\frac{{I_b}}{{h}}=\\frac{{{Ib}\\times10^4}}{{{liangchang}}}={k2_result}mm³
 \\text{{则}}k_1/k_2={k1_result}/{k2_result}={round(k1_result/k2_result,2)}，I_y/I_x={round(Iy/Ix,2)}，\\text{{查表得}}μ_r={μ_r}
+$$
 计算长度：
+$$
 l_x=\\mu_r\\times h={μ_r}\\times{H}={l_x}mm
+$$
 验算长细比：
+$$
 \\lambda_x=\\frac{{l_x}}{{i_x}}=\\frac{{{l_x}}}{{{ix*10}}}={lambda_x:.2f}<\\left[\\lambda\\right]=150,b\\text{{类截面}}，\\text{{查表得}}\\varphi_x={phi_x}
+$$
+$$
 N^' = \\frac{{\\pi^2 \\times E \\times A}}{{1.1 \\times \\lambda^2}} = \\frac{{3.14^2 \\times {E_A} \\times 10^6 \\times {A}}}{{1.1 \\times {lambda_x}^2}}={N_result_kN:.2f}kN，\\text{{取}}\\beta_{{mx}}={beta_mx}
+$$
 则弯、剪、压共同作用下截面最大应力：
+$$
 \\frac{{N}}{{\\varphi_x \\times A}} + \\frac{{\\beta_{{mx}} \\times M_x}}{{W_{{e1}} \\times \\left(1-\\varphi_x \\times \\frac{{N}}{{N'}}\\right)}} = \\frac{{{N}}}{{{phi_x} \\times {A}}} + \\frac{{{beta_mx} \\times {Mx*1000}}}{{{W_e1} \\times \\left(1-{phi_x} \\times \\frac{{{N}}}{{{round(N_result_kN,2)}}}\\right)}} = {total_result1:.2f}N/mm^2 < f = {f}N/mm^2
+$$
 满足要求。
 2)柱面外稳定验算
-考虑蒙皮效应，两个檩条间距不小于1200mm，计算长度按两个檩距考虑，\\text{{即}}l_y={2*l_y}mm，\\text{{对于等截面构件}}\gamma=0，μ_s=μ_w=1。
+考虑蒙皮效应，两个檩条间距不小于1200mm，计算长度按两个檩距考虑，$\\text{{即}}l_y={2*l_y}mm，\\text{{对于等截面构件}}\gamma=0，μ_s=μ_w=1$。
+$$
 \\lambda_y=\\frac{{l_y}}{{i_y}}=\\frac{{{l_y/10}}}{{{iy}}}={lambda_y_result:.1f}
+$$
+$$
 \\text{{是b类截面，查表得}}φ_y={phi_y}。
+$$
+$$
 \\varphi_{{by}}=\\frac{{4320}}{{{{\\lambda_y}}^2}}\\times\\frac{{A\\times h_w}}{{W_x\\times{{10}}^3}}\\times\\sqrt{{\\left(\\frac{{\\lambda_y\\times t}}{{4.4\\times h_w}}\\right)^2}}=\\frac{{4320}}{{{{{round(lamudayjieguo, 2)}}}^2}}\\times\\frac{{{A*100}\\times{hw}}}{{{Wx}\\times{{10}}^3}}\\times\\sqrt{{\\left(\\frac{{{round(lamudayjieguo, 2)}\\times{t}}}{{4.4\\times{hw}}}\\right)^2}}={phi_by_result:.1f}＞0.6
-则取{{\\varphi_b}}^'=1.07-0.282/\\varphi_{{by}}={faibyipie}
+$$
+则取${{\\varphi_b}}^'=1.07-0.282/\\varphi_{{by}}={faibyipie}$
+$$
 \\beta_t=1.0-\\frac{{N}}{{N\\prime}}+0.75\\times\\left(\\frac{{N}}{{N\\prime}}\\right)^2=1.0-\\frac{{{N}}}{{{round(N_result_kN,2)}}}+0.75\\times\\left(\\frac{{{N}}}{{{round(N_result_kN,2)}}}\\right)^2={beta_t:.3f}
+$$
 则弯、剪、压共同作用下截面最大应力：
+$$
 \\frac{{N}}{{\\varphi_y\\times A}}+\\frac{{\\beta_t\\times M}}{{Wx\\times\\varphi_b^'}}=\\frac{{{N}}}{{{phi_y}\\times{A}}}+\\frac{{{round(beta_t,3)}\\times{max(LBMmax,LCMmax)*1000}}}{{{Wx}\\times{faibyipie}}}={result2:.2f}N/mm^2<f={f}N/mm^2
+$$
 4)钢架在风荷载作用下侧移验算
 截面惯性矩：
+$$
 I_c=I_b={Ib}mm^4
+$$
 位移修正系数：
+$$
 \\xi_t=\\frac{{I_cL}}{{hI_B}}=\\frac{{{KD*1000}}}{{{zhugao}}}={xi_t:.2f}
+$$
 风压设计值：
+$$
 W=\\left(W_1+W_4\\right)\\times h=\\left({q1}+{abs(q3)}\\right)\\times {ZG}={W:.3f}kN
+$$
 钢架柱顶等效水平力：
+$$
 W_k=0.67×W=0.67×{W:.3f}={0.67*W:.3f}kN
+$$
 左风荷载下顶点位移：
-\\mu=\\frac{{H\\times h^3}}{{12\\times E\\times I_c}}\\times\\left(2+\\xi_1\\right)=\\frac{{{W_k}\\times10^3\\times{zhugao}^3}}{{12\\times{E_A}\\times10^3\\times{Ix}\\times10^4}}\\times\\left(2+{kesai1}\\right)={mu:.2f}mm<\\left[\\mu\\right]=h/150=60mm"""
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = False  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(14)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+$$
+\\mu=\\frac{{H\\times h^3}}{{12\\times E\\times I_c}}\\times\\left(2+\\xi_1\\right)=\\frac{{{W_k}\\times10^3\\times{zhugao}^3}}{{12\\times{E_A}\\times10^3\\times{Ix}\\times10^4}}\\times\\left(2+{kesai1}\\right)={mu:.2f}mm<\\left[\\mu\\right]=h/150=60mm
+$$
+"""
+md_str += P
+
+
 # ----------------------------------------------------------------------------------------------------------------------
-P = "3、节点验算"
+P = "# 3、节点验算"
 # 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = False  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(14)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+md_str += P
+
 # ----------------------------------------------------------------------------------------------------------------------
-P = f"""拼接板尺寸如图："""
-# 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = False  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(14)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+P = """拼接板尺寸如图："""
+
 # ----------------------------------------------------------------------------------------------------------------------
-P = f""" """
+P = """ """
 # 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = False  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(14)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+
 # ----------------------------------------------------------------------------------------------------------------------
 # 插入图片
-docx.paragraphs[24].add_run().add_picture(
-    "./image/拼接板尺寸详图.png",
-    width=Inches(2),
-)
+
+md_str += "![拼接板尺寸详图.png](./image/拼接板尺寸详图.png)"
 # ----------------------------------------------------------------------------------------------------------------------
 Pl = 290  # 单栓承载力设计值
 N = max(LBNmax, LCNmax)
@@ -2009,18 +1366,7 @@ N_t={Nt}kN<0.4\\times{Pl}={0.4*Pl}kN
 \\frac{{0.4P}}{{e_w\\times t_w}}=\\frac{{0.4\\times{Pl*1000}}}{{{ew}\\times{tw}}}={result}N/mm^2 < f={f}N/mm^2
 满足要求。"""
 # 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = False  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(14)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+md_str += P
 # ----------------------------------------------------------------------------------------------------------------------
 Pl1 = 190  # 抗剪强度
 
@@ -2091,18 +1437,7 @@ N_t={Nt}kN<0.4\\times{Pl1}={0.4*Pl}kN
 \\frac{{0.4P}}{{e_w\\times t_w}}=\\frac{{0.4\\times{Pl*1000}}}{{{ew}\\times{tw}}}={result}N/mm^2 < f={f}N/mm^2
 满足要求。"""
 # 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = False  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(14)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+md_str += P
 # ----------------------------------------------------------------------------------------------------------------------
 Nmax = max(LBNmax, LCNmax)
 Vmax = max(LBQmax, LCQmax)
@@ -2166,70 +1501,22 @@ M_2=\\frac{1}{2}\\times\\sigma\\times a_2^2=\\frac{1}{2}\\times{sigma}\\times{a2
 则底板厚度为：
 t=\\sqrt{{\\frac{{6M_{{max}}}}{{f}}}}=\\sqrt{{\\frac{{6\\times{M1}}}{{{f}}}}}={tjisuan}mm,\\text{{取}}t={int(tjisuan/10)*10+10}mm
 """
-# 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = False  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(14)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+md_str += P
+
 # ----------------------------------------------------------------------------------------------------------------------
-P = "六、檩条设计"
-# 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = True  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(16)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+P = "# 六、檩条设计"
+md_str += P
+
 # ----------------------------------------------------------------------------------------------------------------------
 P = f"""檩条选用实腹式檩条，截面形式选用冷弯薄壁C型钢C250X70X20X3.0，钢材钢号：{GC}钢。拉条设置：设置一道拉条，拉条作用：约束檩条上翼缘。由于设置了一道拉条，保证了檩条在竖向荷载的作用下的整体稳定性，故不用验算檩条的整体稳定性。檩条计算简图如图"""
-# 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = False  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(14)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+md_str += P
+
 # ----------------------------------------------------------------------------------------------------------------------
-P = f""" """
-# 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = False  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(14)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+P = """ """
+
 # ----------------------------------------------------------------------------------------------------------------------
 # 添加图片
-docx.paragraphs[30].add_run().add_picture(
-    "./image/檩条计算简图.png",
-    width=Inches(5.5),
-)
+md_str += "![檩条计算简图.png](./image/檩条计算简图.png)"
 # ----------------------------------------------------------------------------------------------------------------------
 q = round((YJHZ + KBHZ) * LJ, 2)
 import math
@@ -2295,23 +1582,28 @@ M_y=-0.0313q_xl^2=-0.0313ql^2\\sin{{{{\\alpha}}}}=-0.0313\\times{force}\\times{l
 q_y^\\prime=({wumianbanlintiao}+{KBHZ}+0.9\\times0.5)\\times{LJ}\\times\\cos{{{alpha_deg}}}^\\circ={q_y_prime:.2f} \\mathrm{{N/m}}
 \\frac{{w}}{{l}}=\\frac{{5q_y^\\prime l^3}}{{384EI_x}}=\\frac{{5\\times{q_y_prime:.2f}\\times{l}^3}}{{384\\times{E:.2f}\\times{I_x*10000:.2f}}}={w_l:.6f}<\\frac{{1}}{{150}}
 """
-# 创建一个空段落，以便放文本
-p = docx.add_paragraph("")
-run = p.add_run(f"{P}")
-p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-run.bold = False  # 加粗
-run.italic = False  # 斜体
-run.underline = False  # 下划线
-run.font.size = Pt(14)
-run.font.name = "宋体"
-run.element.rPr.rFonts.set(qn("w:eastAsia"), "宋体")
-# 首行缩进，小五＝1磅 五号＝10.5磅 小四＝1磅 四号＝14磅 小三＝15磅 三号＝16磅 小二＝18磅 二号＝磅 小一＝4磅 一号＝6磅
-p.paragraph_format.first_line_indent = Pt(0)
-p.paragraph_format.line_spacing = 1
+md_str += P
+
+
 # ----------------------------------------------------------------------------------------------------------------------
 # 保存文档
-docx.save("./out/轻型门式钢架.docx")
-# 打开文档
-import os
+md_path = "./out/轻型门式钢架.md"
+with open(md_path, "w", encoding="utf-8") as f:
+    f.write(md_str)
 
-os.system("start ./out/轻型门式钢架.docx")
+# 调用pandoc
+
+
+output_file_path = "./out/轻型门式钢架.docx"
+subprocess.run(
+    [
+        "pandoc.exe",
+        "-s",
+        md_path,
+        "--mathjax",  # 增强公式
+        # "--reference-doc=Doc3.docx",  # 引用模板, 就是一级标题什么样，二级标题什么样这种格式的定义
+        "-o",
+        output_file_path,
+    ],
+    check=True,
+)
